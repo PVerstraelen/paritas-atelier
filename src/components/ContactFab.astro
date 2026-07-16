@@ -1,0 +1,76 @@
+---
+// Adaptive floating contact button.
+// Resolves the action at click time based on device + Europe/Brussels business hours:
+//   mobile + business hours  -> phone call (tel:)
+//   mobile + after hours     -> WhatsApp message
+//   desktop (any time)       -> prefilled email (mailto:)
+const PHONE = "+3216000000";      // display/call number
+const WHATSAPP = "3216000000";    // wa.me number (no +)
+const EMAIL = "hallo@paritas.be";
+---
+
+<button
+  id="contactFab"
+  data-phone={PHONE}
+  data-whatsapp={WHATSAPP}
+  data-email={EMAIL}
+  class="group fixed z-40 bottom-12 right-5 sm:right-6 flex items-center gap-2.5 rounded-full bg-ink text-white pl-4 pr-5 py-3.5 shadow-lg shadow-ink/25 ring-1 ring-brass/30 hover:bg-espresso transition-colors"
+  aria-label="Contacteer ons"
+>
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  </svg>
+  <span id="contactFabLabel" class="text-sm font-semibold whitespace-nowrap">Contacteer ons</span>
+</button>
+
+<script>
+  const fab = document.getElementById("contactFab");
+  const label = document.getElementById("contactFabLabel");
+  if (fab) {
+    const phone = fab.dataset.phone!;
+    const wa = fab.dataset.whatsapp!;
+    const email = fab.dataset.email!;
+
+    const isMobile = () =>
+      window.matchMedia("(max-width: 768px)").matches ||
+      /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+    const inBusinessHours = () => {
+      // Evaluate against Europe/Brussels regardless of visitor's timezone.
+      const parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Europe/Brussels", weekday: "short", hour: "2-digit", minute: "2-digit", hour12: false,
+      }).formatToParts(new Date());
+      const wd = parts.find((p) => p.type === "weekday")?.value ?? "";
+      const hour = parseInt(parts.find((p) => p.type === "hour")?.value ?? "0");
+      const min = parseInt(parts.find((p) => p.type === "minute")?.value ?? "0");
+      const isWeekday = ["Mon", "Tue", "Wed", "Thu", "Fri"].includes(wd);
+      const mins = hour * 60 + min;
+      return isWeekday && mins >= 8 * 60 + 30 && mins < 18 * 60; // 08:30–18:00
+    };
+
+    const resolve = () => {
+      if (isMobile()) {
+        return inBusinessHours()
+          ? { href: `tel:${phone}`, text: "Bel ons" }
+          : {
+              href: `https://wa.me/${wa}?text=${encodeURIComponent("Hallo Paritas, ik heb een vraag over een plaatsbeschrijving.")}`,
+              text: "WhatsApp",
+            };
+      }
+      return {
+        href: `mailto:${email}?subject=${encodeURIComponent("Aanvraag plaatsbeschrijving")}&body=${encodeURIComponent("Hallo Paritas,\n\nIk zou graag een offerte ontvangen voor een plaatsbeschrijving.\n\nType woning:\nGemeente:\nGewenste datum:\n")}`,
+        text: "Mail ons",
+      };
+    };
+
+    // Set the visible label to match what a click will do.
+    const r = resolve();
+    if (label) label.textContent = r.text;
+
+    fab.addEventListener("click", () => {
+      const { href } = resolve(); // re-check at click time (hours may have changed)
+      if (href.startsWith("http")) window.open(href, "_blank", "noopener");
+      else window.location.href = href;
+    });
+  }
+</script>

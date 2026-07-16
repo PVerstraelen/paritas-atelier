@@ -1,0 +1,455 @@
+---
+import "../styles/global.css";
+import ContactFab from "../components/ContactFab.astro";
+import FlandersMap from "../components/FlandersMap.astro";
+
+const services = [
+  { t: "Intredende plaatsbeschrijving", d: "De nulmeting bij aanvang van de huur. Elke ruimte en elk detail objectief vastgelegd, vóór de huurder zijn intrek neemt.", n: "01" },
+  { t: "Uittredende plaatsbeschrijving", d: "Bij het einde van de huur vergelijken we de staat met de intrede — een correcte basis voor de afrekening van de waarborg.", n: "02" },
+  { t: "Expertise & tussenkomst", d: "Neutrale vaststelling bij renovatie, huurderswissel of discussie. Ook als onafhankelijk tegenexpert bij een geschil.", n: "03" },
+];
+const steps = [
+  { t: "Aanvraag & offerte", d: "U bezorgt ons het adres en type woning. Binnen enkele uren krijgt u een vaste, transparante prijs." },
+  { t: "Afspraak op maat", d: "We plannen het plaatsbezoek op een moment dat past — ook 's avonds en op zaterdag mogelijk." },
+  { t: "Plaatsbezoek", d: "De expert komt ter plaatse en documenteert elke ruimte met foto's, tegensprekelijk genoteerd." },
+  { t: "Digitaal rapport", d: "Binnen 48u ontvangt u het volledige, ondertekenbare rapport — klaar om te registreren." },
+];
+const provinces = ["Antwerpen", "Oost-Vlaanderen", "West-Vlaanderen", "Vlaams-Brabant", "Limburg"];
+const cities = "Antwerpen, Gent, Brugge, Leuven, Mechelen, Hasselt, Aalst, Kortrijk, Oostende, Genk, Roeselare";
+const pricing = [
+  { t: "Studio & appartement", p: "165", featured: false, items: ["Intredende plaatsbeschrijving", "Digitaal rapport met foto's", "Binnen 48u geleverd"] },
+  { t: "Woning (2–3 slaapkamers)", p: "245", featured: true, items: ["Alles uit de vorige formule", "Tuin, berging & garage inbegrepen", "Voorrang bij planning"] },
+  { t: "Uittrede & combinatie", p: null, featured: false, items: ["Voordeeltarief intrede + uittrede", "Grote panden & portefeuilles", "Vaste tarieven voor kantoren"] },
+];
+const faqs = [
+  { q: "Is een plaatsbeschrijving verplicht bij verhuur in Vlaanderen?", a: "Ja. Een omstandige, tegensprekelijke plaatsbeschrijving is wettelijk verplicht en wordt samen met het huurcontract geregistreerd. Zonder plaatsbeschrijving wordt de huurder verondersteld het pand te hebben ontvangen in dezelfde staat als op het einde van de huur." },
+  { q: "Wat kost een plaatsbeschrijving?", a: "De prijs hangt af van het type woning en de oppervlakte. Voor een gemiddeld appartement rekent u vanaf €165 (excl. btw) voor een intredende plaatsbeschrijving. U ontvangt vooraf altijd een vaste, transparante offerte." },
+  { q: "Hoe snel ontvang ik het rapport?", a: "Standaard ontvangt u het volledige digitale rapport met foto's binnen 48 uur na het plaatsbezoek, klaar om te registreren. Heeft u het sneller nodig? Vraag naar onze spoedservice." },
+  { q: "Wie moet aanwezig zijn bij het plaatsbezoek?", a: "Idealiter zijn zowel huurder als verhuurder (of hun vertegenwoordiger) aanwezig, zodat de vaststelling meteen tegensprekelijk gebeurt. Lukt dat niet, dan bezorgen we het rapport nadien ter goedkeuring aan beide partijen." },
+  { q: "Zijn jullie echt onafhankelijk?", a: "Volledig. Paritas werkt als neutrale derde partij, in opdracht van huurder én verhuurder samen. Onze vaststellingen zijn objectief en juridisch onderbouwd, en houden stand bij een eventuele betwisting." },
+];
+---
+
+<!doctype html>
+<html lang="nl-BE">
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>document.documentElement.classList.add("js");</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#24211c" />
+    <title>Paritas — Onafhankelijke plaatsbeschrijvingen voor de huurmarkt in Vlaanderen</title>
+    <meta name="description" content="Erkend en onafhankelijk plaatsbeschrijver voor huurwoningen in heel Vlaanderen. Juridisch sluitende intrede- en uittredeplaatsbeschrijving, digitaal rapport binnen 48u." />
+    <link rel="canonical" href="https://paritas.be/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="nl_BE" />
+    <meta property="og:title" content="Paritas — Onafhankelijke plaatsbeschrijvingen" />
+    <meta property="og:description" content="Neutrale, juridisch sluitende plaatsbeschrijvingen in heel Vlaanderen. Rapport binnen 48u." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&display=swap" />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org", "@type": "ProfessionalService", name: "Paritas",
+      description: "Onafhankelijk erkend plaatsbeschrijver voor de huurmarkt in Vlaanderen.",
+      areaServed: provinces, telephone: "+3216000000", email: "hallo@paritas.be", priceRange: "€€",
+      address: { "@type": "PostalAddress", streetAddress: "Vaartkom 12", postalCode: "3000", addressLocality: "Leuven", addressRegion: "Vlaams-Brabant", addressCountry: "BE" },
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org", "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    })} />
+  </head>
+
+  <body>
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-3 focus:left-3 focus:bg-ink focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">Naar hoofdinhoud</a>
+
+    <!-- ============ HEADER ============ -->
+    <header id="hdr" class="sticky top-0 inset-x-0 z-40 transition-shadow duration-300">
+      <div class="mx-auto max-w-[1200px] px-5 sm:px-8">
+        <div class="flex items-center justify-between h-[68px]">
+          <a href="/" class="flex items-center gap-2.5" aria-label="Paritas">
+            <svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true" class="shrink-0">
+              <path d="M6 27 L14 6 L20 6 L12 27 Z" fill="none" stroke="currentColor" stroke-width="1.4" class="text-brass" />
+              <path d="M15 27 L23 6 L29 6 L21 27 Z" fill="none" stroke="currentColor" stroke-width="1.4" class="text-brass-deep" />
+            </svg>
+            <span class="logo-text font-display text-[1.35rem] tracking-tight leading-none">Paritas</span>
+          </a>
+          <nav class="hidden md:flex items-center gap-9 text-[0.9rem] font-medium" aria-label="Hoofdnavigatie">
+            <a href="#diensten" class="navlink">Diensten</a>
+            <a href="#werkwijze" class="navlink">Werkwijze</a>
+            <a href="#regio" class="navlink">Regio</a>
+            <a href="#tarieven" class="navlink">Tarieven</a>
+            <a href="#faq" class="navlink">FAQ</a>
+          </nav>
+          <div class="flex items-center gap-3">
+            <a href="#offerte" class="cta hidden sm:inline-flex items-center rounded-full px-5 py-2.5 text-[0.9rem] font-semibold">Plaatsbeschrijving boeken</a>
+            <button id="mtoggle" class="md:hidden grid place-items-center w-11 h-11 -mr-2" aria-label="Menu" aria-expanded="false">
+              <span class="burger block w-6 h-px transition-transform"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div id="mmenu" class="fixed inset-0 z-30 bg-paper/98 backdrop-blur hidden flex-col pt-24 px-6 gap-1">
+      <a href="#diensten" class="py-4 text-2xl font-display text-ink border-b border-line">Diensten</a>
+      <a href="#werkwijze" class="py-4 text-2xl font-display text-ink border-b border-line">Werkwijze</a>
+      <a href="#regio" class="py-4 text-2xl font-display text-ink border-b border-line">Regio</a>
+      <a href="#tarieven" class="py-4 text-2xl font-display text-ink border-b border-line">Tarieven</a>
+      <a href="#faq" class="py-4 text-2xl font-display text-ink border-b border-line">FAQ</a>
+      <a href="#offerte" class="mt-6 inline-flex justify-center rounded-full bg-ink px-6 py-4 text-base font-semibold text-white">Plaatsbeschrijving boeken</a>
+    </div>
+
+    <main id="main">
+      <!-- ============ HERO — brass architectural line-art on charcoal ============ -->
+      <section class="relative min-h-[calc(100svh-160px)] flex items-center overflow-hidden bg-ink">
+        <div class="absolute inset-0 -z-0 bg-[radial-gradient(70%_60%_at_78%_35%,rgba(201,166,110,.13),transparent_60%)]"></div>
+
+        <div class="relative z-10 mx-auto max-w-[1200px] w-full px-5 sm:px-8 py-14 sm:py-16">
+          <!-- Floor-plan line drawing — contained within the content column (right), fully visible -->
+          <svg class="hero-plan hidden md:block absolute right-5 sm:right-8 top-1/2 -translate-y-1/2 w-[42%] max-w-[480px] h-auto opacity-45 pointer-events-none" viewBox="0 0 520 400" fill="none" aria-hidden="true">
+            <g stroke="var(--color-brass)" stroke-width="1.4" vector-effect="non-scaling-stroke">
+              <rect class="pl" x="40" y="40" width="440" height="320" />
+              <path class="pl" d="M260 40 V220 M40 220 H260 M260 150 H480 M370 150 V360 M120 220 V240" />
+              <path class="pl" d="M300 40 a20 20 0 0 0 20 20" />
+              <path class="pl" d="M40 150 a18 18 0 0 1 18 -18" />
+              <circle class="pl-dot" cx="150" cy="130" r="4" />
+              <circle class="pl-dot" cx="370" cy="95" r="4" />
+              <circle class="pl-dot" cx="160" cy="300" r="4" />
+              <circle class="pl-dot" cx="430" cy="270" r="4" />
+            </g>
+          </svg>
+          <p class="reveal in flex items-center gap-2.5 text-[0.82rem] font-medium tracking-wide text-paper/85 mb-6">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-brass-bright"></span>
+            Erkend &amp; onafhankelijk · actief in heel Vlaanderen
+          </p>
+          <h1 class="reveal in max-w-[15ch] text-[clamp(2.6rem,1.6rem+4.4vw,5rem)] text-white leading-[1.02]" data-d="1">
+            De <span class="italic text-brass-bright">neutrale</span> plaatsbeschrijving die rust brengt.
+          </h1>
+          <p class="reveal in mt-7 max-w-[46ch] text-[1.1rem] text-paper/85 leading-relaxed" data-d="2">
+            Wij leggen de staat van uw huurwoning objectief en juridisch sluitend vast — grondig
+            gedocumenteerd, digitaal in uw mailbox binnen 48 uur.
+          </p>
+          <div class="reveal in mt-9 flex flex-wrap items-center gap-4" data-d="3">
+            <a href="#offerte" class="inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 text-[1rem] font-semibold text-ink hover:bg-brass-bright transition-colors">
+              Vrijblijvende offerte
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a href="#werkwijze" class="inline-flex items-center gap-2 text-white/90 font-medium hover:text-white transition-colors">Zo werkt het</a>
+          </div>
+          <ul class="reveal in mt-12 flex flex-wrap gap-x-8 gap-y-3" data-d="4">
+            {["Tegensprekelijk & wettelijk conform", "Rapport met foto's binnen 48u", "Volledig onafhankelijk"].map((t) => (
+              <li class="flex items-center gap-2 text-[0.9rem] text-paper/80">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="text-brass-bright"><path d="M20 6 9 17l-5-5"/></svg>
+                {t}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============ TRUST STRIP ============ -->
+      <section class="bg-surface border-b border-line">
+        <div class="mx-auto max-w-[1200px] px-5 sm:px-8 py-6 flex flex-wrap items-center gap-x-8 gap-y-3 justify-center text-ink-faint text-sm">
+          <span class="text-[0.72rem] uppercase tracking-[0.16em]">Vertrouwd bij</span>
+          {["Vastgoedkantoren", "Syndici", "Notariaten", "Particuliere verhuurders", "Verzekeraars"].map((x) => (
+            <span class="font-medium text-ink-soft">{x}</span>
+          ))}
+        </div>
+      </section>
+
+      <!-- ============ DIENSTEN ============ -->
+      <section id="diensten" class="py-24 sm:py-32">
+        <div class="mx-auto max-w-[1200px] px-5 sm:px-8">
+          <div class="reveal max-w-2xl mb-16">
+            <p class="text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-brass-deep mb-4">Diensten</p>
+            <h2 class="text-[clamp(2rem,1.4rem+2.4vw,3rem)]">Eén expert voor elke fase van de huur</h2>
+          </div>
+          <div class="grid md:grid-cols-3 gap-px bg-line rounded-2xl overflow-hidden border border-line">
+            {services.map((s) => (
+              <article class="reveal bg-surface p-9 hover:bg-paper-2 transition-colors">
+                <span class="font-display text-3xl text-brass">{s.n}</span>
+                <div class="hairline my-6"></div>
+                <h3 class="text-[1.35rem] mb-3">{s.t}</h3>
+                <p class="text-[0.98rem] text-ink-soft">{s.d}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ WERKWIJZE ============ -->
+      <section id="werkwijze" class="py-24 sm:py-32 bg-paper-2">
+        <div class="mx-auto max-w-[1200px] px-5 sm:px-8">
+          <div class="reveal max-w-2xl mb-16">
+            <p class="text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-brass-deep mb-4">Werkwijze</p>
+            <h2 class="text-[clamp(2rem,1.4rem+2.4vw,3rem)]">In vier heldere stappen geregeld</h2>
+          </div>
+          <ol class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {steps.map((s, i) => (
+              <li class="reveal bg-surface border border-line rounded-2xl p-7" data-d={String(i % 4)}>
+                <span class="inline-grid place-items-center w-12 h-12 rounded-full bg-brass-tint text-brass-deep font-display text-xl mb-5">{i + 1}</span>
+                <h3 class="text-[1.15rem] mb-2">{s.t}</h3>
+                <p class="text-[0.94rem] text-ink-soft">{s.d}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <!-- ============ WAAROM ============ -->
+      <section id="waarom" class="bg-ink text-paper/85 py-24 sm:py-32">
+        <div class="mx-auto max-w-[1200px] px-5 sm:px-8 grid lg:grid-cols-2 gap-14 items-center">
+          <div class="reveal">
+            <p class="text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-brass-bright mb-4">Waarom Paritas</p>
+            <h2 class="text-white text-[clamp(2rem,1.4rem+2.4vw,3.2rem)] mb-6">Een dossier dat standhoudt wanneer het telt</h2>
+            <p class="text-[1.08rem] leading-relaxed mb-8">
+              Een plaatsbeschrijving lijkt een formaliteit — tot er discussie is over de waarborg.
+              Wij zorgen dat het dan sluitend is: onafhankelijk, grondig en zonder ruis.
+            </p>
+            <a href="#offerte" class="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 font-semibold text-ink hover:bg-brass-bright transition-colors">Start uw aanvraag</a>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-px bg-white/10 rounded-2xl overflow-hidden reveal" data-d="1">
+            {[
+              ["Onafhankelijk", "Wij werken voor het dossier, niet voor één partij."],
+              ["Juridisch sluitend", "Tegensprekelijk, conform het Vlaams Woninghuurdecreet."],
+              ["Binnen 48u", "Digitaal rapport met foto's, klaar om te registreren."],
+              ["Menselijk contact", "Eén vast aanspreekpunt dat de huurmarkt kent."],
+            ].map(([t, d]) => (
+              <div class="bg-ink p-7">
+                <h3 class="text-white text-[1.1rem] mb-2">{t}</h3>
+                <p class="text-[0.92rem] text-paper/70">{d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ REGIO ============ -->
+      <section id="regio" class="py-24 sm:py-32">
+        <div class="mx-auto max-w-[1200px] px-5 sm:px-8 grid lg:grid-cols-2 gap-14 items-center">
+          <div class="reveal">
+            <p class="text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-brass-deep mb-4">Werkingsgebied</p>
+            <h2 class="text-[clamp(2rem,1.4rem+2.4vw,3rem)] mb-6">Actief in heel Vlaanderen</h2>
+            <p class="text-[1.05rem] text-ink-soft mb-7">Van de kust tot Limburg. Een expert uit uw regio staat klaar voor uw plaatsbeschrijving — in de stad en op het platteland.</p>
+            <div class="flex flex-wrap gap-2.5 mb-6">
+              {provinces.map((p) => (
+                <span class="text-[0.9rem] font-medium text-ink border border-line rounded-full px-4 py-2 bg-surface">{p}</span>
+              ))}
+            </div>
+            <p class="text-[0.98rem] text-ink-soft">Onder meer in <strong class="text-ink font-semibold">{cities}</strong> en omliggende gemeenten.</p>
+          </div>
+          <div class="reveal" data-d="1">
+            <FlandersMap />
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ TARIEVEN ============ -->
+      <section id="tarieven" class="py-24 sm:py-32 bg-paper-2">
+        <div class="mx-auto max-w-[1200px] px-5 sm:px-8">
+          <div class="reveal max-w-2xl mb-16">
+            <p class="text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-brass-deep mb-4">Tarieven</p>
+            <h2 class="text-[clamp(2rem,1.4rem+2.4vw,3rem)] mb-3">Transparante prijzen, vooraf gekend</h2>
+            <p class="text-[1.05rem] text-ink-soft">Richtprijzen excl. btw. U ontvangt altijd een vaste offerte op maat — zonder verrassingen achteraf.</p>
+          </div>
+          <div class="grid md:grid-cols-3 gap-6">
+            {pricing.map((c) => (
+              <article class={`reveal rounded-2xl p-8 flex flex-col border ${c.featured ? "border-brass bg-surface shadow-[0_20px_50px_rgba(36,33,28,0.10)]" : "border-line bg-surface"}`}>
+                {c.featured && <span class="self-start mb-4 text-[0.7rem] font-semibold uppercase tracking-wide text-white bg-brass-deep rounded-full px-3 py-1">Beste keuze</span>}
+                <h3 class="text-[1.2rem] mb-3">{c.t}</h3>
+                <p class="font-display text-4xl text-ink mb-6">
+                  {c.p ? <>vanaf <span class="text-brass-deep">€{c.p}</span></> : <span class="text-brass-deep">op maat</span>}
+                </p>
+                <ul class="flex flex-col gap-3 mb-7 flex-1">
+                  {c.items.map((it) => (
+                    <li class="flex items-start gap-2.5 text-[0.94rem] text-ink-soft">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="text-brass shrink-0 mt-0.5"><path d="M20 6 9 17l-5-5"/></svg>
+                      {it}
+                    </li>
+                  ))}
+                </ul>
+                <a href="#offerte" class="inline-flex justify-center items-center rounded-full px-5 py-3 text-[0.95rem] font-semibold transition-colors bg-ink text-white hover:bg-espresso">Plaatsbeschrijving boeken</a>
+              </article>
+            ))}
+          </div>
+          <p class="reveal text-center text-[0.86rem] text-ink-faint mt-8">Btw-tarief van 21% van toepassing. Verplaatsing binnen Vlaanderen inbegrepen.</p>
+        </div>
+      </section>
+
+      <!-- ============ FAQ ============ -->
+      <section id="faq" class="py-24 sm:py-32">
+        <div class="mx-auto max-w-[1200px] px-5 sm:px-8 grid lg:grid-cols-[0.8fr_1.2fr] gap-12 items-start">
+          <div class="reveal">
+            <p class="text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-brass-deep mb-4">Veelgestelde vragen</p>
+            <h2 class="text-[clamp(2rem,1.4rem+2.4vw,3rem)] mb-4">Alles wat u wil weten</h2>
+            <p class="text-[1rem] text-ink-soft">Staat uw vraag er niet bij? <a href="#offerte" class="text-brass-deep underline underline-offset-4">Neem gerust contact op</a>.</p>
+          </div>
+          <div class="reveal flex flex-col gap-3" data-d="1">
+            {faqs.map((f) => (
+              <details class="faq group bg-surface border border-line rounded-xl overflow-hidden" name="faq">
+                <summary class="cursor-pointer list-none flex items-center justify-between gap-4 p-5 font-semibold text-ink text-[1.02rem]">
+                  {f.q}
+                  <span class="faq-plus relative shrink-0 w-5 h-5"></span>
+                </summary>
+                <div class="px-5 pb-5 text-[0.98rem] text-ink-soft">{f.a}</div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ OFFERTE (real form) ============ -->
+      <section id="offerte" class="py-24 sm:py-32 bg-ink text-paper/85">
+        <div class="mx-auto max-w-[1200px] px-5 sm:px-8 grid lg:grid-cols-[0.85fr_1.15fr] gap-14 items-start">
+          <div class="reveal">
+            <p class="text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-brass-bright mb-4">Offerte</p>
+            <h2 class="text-white text-[clamp(2rem,1.4rem+2.4vw,3.2rem)] mb-5">Vraag vrijblijvend uw prijs aan</h2>
+            <p class="text-[1.05rem] mb-9">Vul kort in waarover het gaat. U hoort binnen enkele uren van ons met een vaste prijs — geen verplichting.</p>
+            <ul class="flex flex-col gap-4 text-white">
+              <li class="flex items-center gap-3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-brass-bright"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><a href="tel:+3216000000" class="hover:text-brass-bright">016 00 00 00</a></li>
+              <li class="flex items-center gap-3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-brass-bright"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg><a href="mailto:hallo@paritas.be" class="hover:text-brass-bright">hallo@paritas.be</a></li>
+              <li class="flex items-center gap-3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-brass-bright"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Vaartkom 12, 3000 Leuven</li>
+            </ul>
+          </div>
+
+          <form id="quoteForm" class="reveal bg-surface rounded-3xl p-6 sm:p-9 text-ink-soft" data-d="1" novalidate>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div class="field sm:col-span-2">
+                <label for="naam">Naam <span class="text-brass-deep">*</span></label>
+                <input id="naam" name="naam" type="text" autocomplete="name" required />
+                <small class="err" data-err></small>
+              </div>
+              <div class="field">
+                <label for="email">E-mail <span class="text-brass-deep">*</span></label>
+                <input id="email" name="email" type="email" inputmode="email" autocomplete="email" required />
+                <small class="err" data-err></small>
+              </div>
+              <div class="field">
+                <label for="tel">Telefoon</label>
+                <input id="tel" name="tel" type="tel" inputmode="tel" autocomplete="tel" />
+              </div>
+              <div class="field">
+                <label for="type">Type woning <span class="text-brass-deep">*</span></label>
+                <select id="type" name="type" required>
+                  <option value="" selected disabled>Maak een keuze…</option>
+                  <option>Studio</option><option>Appartement</option><option>Woning / huis</option><option>Handelspand</option><option>Portefeuille / meerdere</option>
+                </select>
+                <small class="err" data-err></small>
+              </div>
+              <div class="field">
+                <label for="soort">Soort</label>
+                <select id="soort" name="soort">
+                  <option>Intredend</option><option>Uittredend</option><option>Intredend + uittredend</option><option>Tussentijds / expertise</option>
+                </select>
+              </div>
+              <div class="field sm:col-span-2">
+                <label for="bericht">Extra info</label>
+                <textarea id="bericht" name="bericht" rows="3" placeholder="Gemeente, oppervlakte, gewenste datum…"></textarea>
+              </div>
+            </div>
+            <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <button type="submit" id="infoBtn" data-intent="info" class="submitbtn inline-flex justify-center items-center rounded-full border-2 border-ink text-ink px-6 py-3.5 text-[1rem] font-semibold hover:bg-ink hover:text-white transition-colors">
+                <span class="btn-label">Info vragen</span>
+              </button>
+              <button type="submit" id="bookBtn" data-intent="book" class="submitbtn inline-flex justify-center items-center rounded-full bg-ink text-white px-6 py-3.5 text-[1rem] font-semibold hover:bg-espresso transition-colors">
+                <span class="btn-label">Plaatsbeschrijving boeken</span>
+              </button>
+            </div>
+            <p class="formnote text-[0.78rem] text-ink-faint text-center mt-3">Dezelfde gegevens — kies of u vrijblijvend info wil of meteen een plaatsbeschrijving boekt.</p>
+            <div id="formSuccess" class="hidden items-center gap-3 mt-4 p-4 rounded-xl bg-brass-tint border border-brass/30">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" class="text-brass-deep shrink-0"><path d="M20 6 9 17l-5-5"/></svg>
+              <div><strong id="successTitle" class="block text-ink font-display">Bedankt, uw aanvraag is verstuurd.</strong><span id="successMsg" class="text-[0.9rem]">We nemen binnen enkele uren contact op.</span></div>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============ FOOTER (light sand — distinct from the dark hero) ============ -->
+    <footer class="bg-paper-2 text-ink-soft border-t border-line">
+      <div class="mx-auto max-w-[1200px] px-5 sm:px-8 py-16 grid gap-10 md:grid-cols-[1.6fr_1fr_1fr_1fr]">
+        <div>
+          <span class="font-display text-2xl text-ink">Paritas</span>
+          <p class="mt-4 text-sm max-w-[30ch]">Onafhankelijke plaatsbeschrijvingen voor de huurmarkt in heel Vlaanderen.</p>
+        </div>
+        <nav class="flex flex-col gap-2.5 text-sm" aria-label="Diensten">
+          <h4 class="text-ink font-semibold text-[0.78rem] uppercase tracking-[0.12em] mb-1">Diensten</h4>
+          <a href="#diensten" class="hover:text-ink">Intredend</a><a href="#diensten" class="hover:text-ink">Uittredend</a><a href="#diensten" class="hover:text-ink">Expertise</a><a href="#tarieven" class="hover:text-ink">Tarieven</a>
+        </nav>
+        <nav class="flex flex-col gap-2.5 text-sm" aria-label="Bedrijf">
+          <h4 class="text-ink font-semibold text-[0.78rem] uppercase tracking-[0.12em] mb-1">Bedrijf</h4>
+          <a href="#" class="hover:text-ink">Kennisbank</a><a href="#" class="hover:text-ink">Werken bij</a><a href="#" class="hover:text-ink">MVO</a><a href="#faq" class="hover:text-ink">FAQ</a>
+        </nav>
+        <div class="flex flex-col gap-2.5 text-sm">
+          <h4 class="text-ink font-semibold text-[0.78rem] uppercase tracking-[0.12em] mb-1">Contact</h4>
+          <a href="tel:+3216000000" class="hover:text-ink">016 00 00 00</a><a href="mailto:hallo@paritas.be" class="hover:text-ink">hallo@paritas.be</a><span>Vaartkom 12, 3000 Leuven</span><span>Ma–vr, 08.30–18.00</span>
+        </div>
+      </div>
+      <div class="border-t border-line">
+        <div class="mx-auto max-w-[1200px] px-5 sm:px-8 py-6 text-xs flex flex-wrap gap-3 justify-between">
+          <span>© 2026 Paritas · BTW BE 0800.000.000</span>
+          <span class="flex gap-5"><a href="#" class="hover:text-ink">Privacy</a><a href="#" class="hover:text-ink">Voorwaarden</a></span>
+        </div>
+      </div>
+    </footer>
+
+    <ContactFab />
+
+    <script>
+      const hdr = document.getElementById("hdr");
+      const line = document.getElementById("hdr-line");
+      const onScroll = () => { const s = window.scrollY > 20; hdr?.classList.toggle("scrolled", s); line?.classList.toggle("opacity-100", s); };
+      window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+
+      const mt = document.getElementById("mtoggle"); const mm = document.getElementById("mmenu");
+      mt?.addEventListener("click", () => { const open = mm?.classList.toggle("hidden") === false; mm?.classList.toggle("flex", open); mt.setAttribute("aria-expanded", String(open)); });
+      mm?.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => { mm.classList.add("hidden"); mm.classList.remove("flex"); mt?.setAttribute("aria-expanded", "false"); }));
+
+      const io = new IntersectionObserver((entries) => { entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }); }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+      document.querySelectorAll(".reveal:not(.in)").forEach((el) => io.observe(el));
+      setTimeout(() => document.querySelectorAll(".reveal:not(.in)").forEach((el) => el.classList.add("in")), 2500);
+
+      // Quote form: validation + simulated submit (no backend in this draft)
+      const form = document.getElementById("quoteForm");
+      if (form) {
+        const setErr = (input, msg) => { const e = input.parentElement.querySelector("[data-err]"); input.setAttribute("aria-invalid", "true"); if (e) e.textContent = msg; };
+        const clrErr = (input) => { const e = input.parentElement.querySelector("[data-err]"); input.removeAttribute("aria-invalid"); if (e) e.textContent = ""; };
+        const valid = (input) => {
+          if (!input.hasAttribute("required")) return true;
+          const v = (input.value || "").trim();
+          if (!v) { setErr(input, "Dit veld is verplicht."); return false; }
+          if (input.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { setErr(input, "Vul een geldig e-mailadres in."); return false; }
+          clrErr(input); return true;
+        };
+        form.querySelectorAll("input,select,textarea").forEach((i) => {
+          i.addEventListener("blur", () => i.hasAttribute("required") && valid(i));
+          i.addEventListener("input", () => i.getAttribute("aria-invalid") === "true" && valid(i));
+        });
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const intent = e.submitter && e.submitter.dataset.intent === "book" ? "book" : "info";
+          let ok = true, first = null;
+          form.querySelectorAll("[required]").forEach((i) => { if (!valid(i)) { ok = false; first = first || i; } });
+          if (!ok) { first?.focus(); return; }
+          form.querySelectorAll(".submitbtn").forEach((b) => b.setAttribute("disabled", ""));
+          if (e.submitter) e.submitter.querySelector(".btn-label").textContent = "Versturen…";
+          setTimeout(() => {
+            const title = document.getElementById("successTitle");
+            const msg = document.getElementById("successMsg");
+            if (intent === "book") {
+              title.textContent = "Bedankt voor uw boekingsaanvraag!";
+              msg.textContent = "We bevestigen uw afspraak in de agenda en bezorgen u een veilige betaallink via Mollie.";
+            } else {
+              title.textContent = "Bedankt, uw vraag is verstuurd.";
+              msg.textContent = "We nemen binnen enkele uren contact met u op.";
+            }
+            form.querySelectorAll(":scope > *:not(#formSuccess)").forEach((el) => (el.style.display = "none"));
+            const s = document.getElementById("formSuccess"); s.classList.remove("hidden"); s.classList.add("flex");
+          }, 1000);
+        });
+      }
+    </script>
+  </body>
+</html>

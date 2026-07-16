@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+/* ============================================================
+   PARITAS — Direction A "Atelier"
+   Editorial · boutique-expert · quiet luxury (CC Experts DNA)
+   ============================================================ */
+
+@theme {
+  /* Palette: lunar-eclipse green · gold amber · au-lait sand */
+  --color-paper: #f2efe6;    /* light off-white ground */
+  --color-paper-2: #dcd7c9;  /* Au lait — sand, alt bands & footer */
+  --color-surface: #fbfaf5;  /* near-white cards */
+  --color-ink: #3f4e4f;      /* Lunar eclipse — dark green-grey */
+  --color-ink-soft: #515c5b; /* muted green-grey body text (AA on paper) */
+  --color-ink-faint: #7c847f;
+  --color-line: #d2ccbb;     /* sand border */
+
+  /* Accent tokens (names kept "brass" = gold amber #C9A66E) */
+  --color-brass: #c9a66e;         /* gold amber — decorative */
+  --color-brass-bright: #dcc08c;  /* lighter gold for dark backgrounds */
+  --color-brass-deep: #8a6f30;    /* gold text/accents on light (AA) */
+  --color-brass-tint: #ece3d0;    /* pale gold wash */
+  --color-espresso: #333f40;      /* deep green for button hovers */
+
+  /* Type */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--color-paper);
+    color: var(--color-ink-soft);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    color: var(--color-ink);
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+  ::selection { background: var(--color-brass-deep); color: #fff; }
+  :focus-visible { outline: 2px solid var(--color-brass-deep); outline-offset: 3px; border-radius: 3px; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+}
+
+/* Reveal-on-scroll — progressive enhancement: content is visible by default,
+   and only hidden once JS confirms it can reveal it again (html.js). */
+.reveal { transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+.js .reveal:not(.in) { opacity: 0; transform: translateY(24px); }
+.reveal[data-d="1"] { transition-delay: 0.1s; }
+.reveal[data-d="2"] { transition-delay: 0.2s; }
+.reveal[data-d="3"] { transition-delay: 0.3s; }
+@media (prefers-reduced-motion: reduce) { .js .reveal:not(.in) { opacity: 1; transform: none; } }
+
+/* Slow hero ken-burns (GPU only, cheap on mobile) */
+.kenburns { animation: kenburns 22s var(--ease-out) infinite alternate; }
+@keyframes kenburns {
+  from { transform: scale(1.06) translate(1%, 0.5%); }
+  to   { transform: scale(1.14) translate(-1.5%, -1.5%); }
+}
+@media (prefers-reduced-motion: reduce) { .kenburns { animation: none; transform: scale(1.06); } }
+
+/* Thin diagonal line motif (CC Experts nod) */
+.hairline { background: linear-gradient(to right, transparent, var(--color-line), transparent); height: 1px; }
+
+/* Hero floor-plan line drawing */
+.hero-plan .pl { stroke-dasharray: 1400; stroke-dashoffset: 1400; animation: draw 3s var(--ease-out) 0.2s forwards; }
+.hero-plan .pl-dot { opacity: 0; animation: dotIn 0.6s var(--ease-out) forwards; }
+.hero-plan .pl-dot:nth-of-type(1) { animation-delay: 2.4s; }
+.hero-plan .pl-dot:nth-of-type(2) { animation-delay: 2.7s; }
+.hero-plan .pl-dot:nth-of-type(3) { animation-delay: 3.0s; }
+.hero-plan .pl-dot:nth-of-type(4) { animation-delay: 3.3s; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes dotIn { to { opacity: 1; } }
+@media (max-width: 640px) { .hero-plan { opacity: 0.3; } }
+/* Flanders map: slightly larger labels on small screens (svg scales down) */
+@media (max-width: 640px) {
+  svg[aria-label*="Vlaanderen"] text { font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-plan .pl { stroke-dashoffset: 0; animation: none; }
+  .hero-plan .pl-dot { opacity: 1; animation: none; }
+}
+
+/* FAQ accordion */
+.faq summary::-webkit-details-marker { display: none; }
+.faq-plus::before, .faq-plus::after { content: ""; position: absolute; background: var(--color-brass-deep); border-radius: 2px; transition: transform 0.3s var(--ease-out), opacity 0.3s var(--ease-out); }
+.faq-plus::before { top: 9px; left: 0; width: 20px; height: 2px; }
+.faq-plus::after { top: 0; left: 9px; width: 2px; height: 20px; }
+.faq[open] .faq-plus::after { transform: rotate(90deg); opacity: 0; }
+.faq[open] > summary { color: var(--color-brass-deep); }
+
+/* Form fields */
+.field { display: flex; flex-direction: column; }
+.field label { font-size: 0.86rem; font-weight: 600; color: var(--color-ink); margin-bottom: 7px; }
+.field input, .field select, .field textarea {
+  font-family: inherit; font-size: 1rem; color: var(--color-ink); width: 100%; min-height: 48px;
+  padding: 12px 15px; border: 1.5px solid var(--color-line); border-radius: 10px; background: var(--color-paper);
+  transition: border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
+}
+.field textarea { resize: vertical; min-height: 88px; }
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none; border-color: var(--color-brass); background: #fff; box-shadow: 0 0 0 4px rgba(181,138,70,0.14);
+}
+.field [aria-invalid="true"] { border-color: #b5453a; box-shadow: 0 0 0 4px rgba(181,69,58,0.12); }
+.field .err { color: #b5453a; font-size: 0.8rem; margin-top: 6px; min-height: 1em; }
+
+/* Solid sand header (own identity, distinct from the green hero) */
+#hdr { --hdr-fg: var(--color-ink); --hdr-fg-soft: var(--color-ink-soft); background: var(--color-paper-2); border-bottom: 1px solid var(--color-line); }
+#hdr.scrolled { box-shadow: 0 2px 18px rgba(63,78,79,.10); }
+#hdr .logo-text { color: var(--hdr-fg); }
+#hdr .navlink { color: var(--hdr-fg-soft); transition: color 0.2s ease; }
+#hdr .navlink:hover { color: var(--hdr-fg); }
+#hdr .cta { background: var(--color-ink); color: #fff; transition: background-color 0.3s ease; }
+#hdr .cta:hover { background: var(--color-espresso); }
+#hdr .burger { background: var(--hdr-fg); }
